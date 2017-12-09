@@ -13,14 +13,13 @@ import os
 from flask import Flask, request, redirect, url_for
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request
-from flask.ext.uploads import UploadSet, configure_uploads, IMAGES
+import pickle
 
 app = Flask(__name__)
 CORS(app)
 
-UPLOAD_FOLDER = '/Users/krishnakalyan3/Educational/s-index/data'
+UPLOAD_FOLDER = '/home/ubuntu/s-index/data/'
 ALLOWED_EXTENSIONS = set(['jpg', 'jpeg'])
-photos = UploadSet('photos', IMAGES)
 
 @app.route("/models/", methods=['GET'])
 def pred():
@@ -38,11 +37,27 @@ def pred():
 
 @app.route("/upload", methods=["POST"])
 def upload():
-    print(request)
+    #print(request)
     if request.method == "POST":
-        content = request.get_json(silent=True)
-        print(content)
+        if 'file' not in request.files:
+            print('No file part')
+            return redirect(request.url)
+        f = request.files['file']
+        f.save('kkkk1.jpg')
+        #content = request.files['file']
+        #print(content)
+        #content.save(secure_filename(f.filename))
+        #content = request.get_json(silent=True)
+        #print(content)
+        #data = content['myPhoto']['buffer']['data']
+        #size = content['myPhoto']['size']
+        #data.save(os.path.join(app.config['UPLOAD_FOLDER'], 'efg.jpg'))
+        #return jsonify(content)
+        #content.save(os.path.join(app.config['UPLOAD_FOLDER'], 'abc.jpg'))
+        gen = {'s-index': 5, 'feedback': 'simple', 'img-caption': 'Be a Warrior not a Worrier'}
+        #print(size)
+        return  jsonify(gen)
 
 if __name__ == "__main__":
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    app.run(host='0.0.0.0', port='8889')
+    app.run(host='0.0.0.0', port='8899')
